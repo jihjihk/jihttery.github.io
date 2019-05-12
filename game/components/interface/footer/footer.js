@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import screenfull from 'screenfull';
 import {Component} from 'component-loader-js';
-import CLASSES from '~/public/controllers/constants/classes';
+import CLASSES from '~/public/game/controllers/constants/classes';
 
 export default class Footer extends Component {
     constructor() {

@@ -10,44 +10,68 @@ const english = {
     // texts displayed during the game
     titleStage: {
         header: 'Survival of the Best Fit',
-        instruction: 'Congratulations! You just secured 2 million dollar funding to turn your startup idea into reality. Are you ready to grow a company?',
+        instruction: 'Congratulations! You just secured funding to turn your startup idea into reality. Are you ready to grow your new company, Bestfit Technologies?',
         responses: [
             'Start Game',
         ],
     },
     tutorialStage: {
         header: 'Tutorial',
-        instruction: 'As the CEO, your goal is to hire the best and the brightest talent that will help your startup grow.\n\nYou can hover over each candidate to view their CV and drag to the desk to hire.\nYou have a hired headcount KPI for each stage so try to meet them and make your investors happy!',
+        instruction: 'As the CEO, your goal is to hire the best and brightest talent to help your startup grow. You can select a candidate to view their CV, then decide whether to accept or reject them. Try to meet your hiring goals for each stage to make your investors happy!',
         responses: [
             'Got it',
         ],
     },
-    smallOfficeStage: {
-        messageFromVc: 'Congrats again on your latest investment.\n\nNow’s time to execute the idea. Hire the best people, fast.\n\nHiring good talent is a war these days...\n\nkeep us updated.\n\n\t\t\tThanks, Tim Partner, Linear Ventures (click to acknowledge)',
-        responses: ['Let\'s do this'],
-        taskDescription: 'Task: Hire 3 new employees',
-        retryMessage: 'You are not hiring. How are you going to meet 100% monthly growth targets at this pace? Try again.',
-        retryResponses: ['I will do better this time.'],
+    instructions: {
+        manual: {
+            click: 'Click the candidates to see their CVs',
+            eval: 'Hire or reject candidates based on their profiles',
+        },
+        ml: {
 
+        },
     },
+
+    smallOfficeStage: {
+        messageFromVc: 'Congrats again on your latest investment. Now\'s time to execute the idea. Hire the best people, as quickly as you can. Hiring good talent is a war these days... keep us updated. ',
+        responses: ['Let\'s do this'],
+        hiringGoal: 3,
+        taskDescription: 'Task: Hire 3 new employees',
+    },
+
     mediumOfficeStage: {
-        messageFromVc: 'Hi,\n\nGood progress but you are just not growing quickly enough. You need to hire more aggressively to get top talent and outgrow your competitors.\n\nTry to quadraple your headcount by next week so you can get more funding...\n\nThanks,\n\nTim\nPartner, Linear Ventures\n\n\t\t\t(click to acknowledge)',
+        messageFromVc: 'Good progress, but you just aren\'t growing quickly enough. You need to hire more aggressively to outgrow your competitors. Try to meet the new hiring goals if you want better funding... ',
         responses: [
             'I\'ll do my best',
-            'Are you sure?',
+            'I can do that!',
         ],
-        taskDescription: 'Task: Hire 10 new employees',
-        retryMessage: 'Your competitors are catching up. There\'s a board meeting next month - try again and meet your hiring targets by then. Try again.',
-        retryResponses: ['I will do better this time.'],
+        hiringGoal: 5,
+        taskDescription: 'Task: Hire 5 new employees in 1 minute',
+        retryMessage: 'You ran out of time. There\'s a board meeting next month - try again to meet your targets. You have to hire faster.',
+        retryResponses: ['I will hire faster this time.'],
+        duration: 30
     },
 
+    largeOfficeStage: {
+        messageFromVc: 'Good job on growing to 8 people. But there is still a long way to go and that\'s why you need to expand the team faster so that you don\'t drown in work and competition. Can you pull this off or not?',
+        responses: [
+            'Of course I can.',
+            'I am a little overwhelmed.',
+        ],
+        hiringGoal: 10,
+        taskDescription: 'Task: Hire 10 new employees in 1 minute',
+        retryMessage: 'You ran out of time. The progress is not good enough. Hire faster to outrun your competitors. Try again.',
+        retryResponses: ['I will grow aggressively this time.'],
+        duration: 60
+
+    },
     // add transition here. e-mail from INVESTOR says:  We’ve made good progress, but the faster we grow, the more profit we’ll make. I suggest you use an automated program to help with hiring. Check with the software development team?
 
     // email from SOFTWARE ENGINEER
     conversation: [
         {
             dialogue_step: 1,
-            text: 'We’re working on a new hiring program, and the software team wants to use machine learning. It’s a great solution, because it allows us to teach the automated software to hire just as our HR team would, but at a much faster pace...',
+            text: 'We’re working on a new hiring program, and the software team wants to use machine learning. It’s a great solution, because it allows us to teach the automated software to hire just as our HR team would, but at a much faster pace!',
             answer_choice: [
                 {
                     text: 'How does that work?',
@@ -66,7 +90,7 @@ const english = {
             text: 'The algorithm will analyze a lot of CV samples, like those of people already working here and in other big tech companies, and use that to figure out what a successful employee looks like - in numbers. Basically, it can replicate your hiring strategy!',
             answer_choice: [
                 {
-                    text: 'The program will think the way I do?',
+                    text: 'What do you need to get started?',
                     response: 'Thinking is a strong word; it’s just really good at finding patterns in the data I give to it, and copying that.\n',
                 },
                 {
@@ -77,7 +101,7 @@ const english = {
         },
         {
             dialogue_step: 3,
-            text: 'First, we need something to build off of. Can you send me the CVs of all current employees? Then, you can sit back and supervise the algorithm.\n',
+            text: 'First, we need something to build off of. Can you send me the CVs of all current employees?\n',
             answer_choice: [
                 {
                     text: 'OK, will do',
@@ -111,7 +135,8 @@ const english = {
     mlLabStage: {
         conversation: [
             {
-                delay: 7,
+                // delay: 12,
+                delay: 3,
                 messageFromVc: 'We’ve been able to both hire at 10x our past rate and cut down costs! Great job, this seems to be working!',
                 responses: [
                     'Great to hear!',
@@ -123,7 +148,7 @@ const english = {
             },
             {
                 delay: 7,
-                messageFromVc: 'I just got a complaint from a past applicant who’s looking for feedback on why she was rejected. Can you look into it and let me know?',
+                messageFromVc: 'Hello, I just got a complaint from a past applicant who’s looking for feedback on why she was rejected. Can you look into it and let me know?',
                 responses: [
                     'I\'m on it!',
                     'Ok, but where should I look?',
@@ -196,10 +221,7 @@ let txt;
 
 // defining a global variable candidateClicked to access the ID globally without having to emit a value
 let candidateClicked = 0;
-let candidateHovered = null;
-
 let candidateInSpot = null;
-let hiringGoals = {'smallStage': 3, 'mediumStage': 10};
 
 function setLang(dictionary) {
     if (typeof module !== 'undefined') {

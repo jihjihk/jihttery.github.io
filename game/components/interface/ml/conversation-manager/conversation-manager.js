@@ -1,11 +1,10 @@
-import $ from 'jquery';
-import EVENTS from '~/public/controllers/constants/events';
-import CLASSES from '~/public/controllers/constants/classes';
-import TextboxUI from '~/public/components/interface/ui-textbox/ui-textbox';
-import InfoTooltip from '~/public/components/interface/ml/info-tooltip/info-tooltip';
-import EndGameOverlay from '~/public/components/interface/ml/endgame-overlay/endgame-overlay';
+import EVENTS from '~/public/game/controllers/constants/events';
+import CLASSES from '~/public/game/controllers/constants/classes';
+import TextboxUI from '~/public/game/components/interface/ui-textbox/ui-textbox';
+import InfoTooltip from '~/public/game/components/interface/ml/info-tooltip/info-tooltip';
+import EndGameOverlay from '~/public/game/components/interface/ml/endgame-overlay/endgame-overlay';
 
-import {eventEmitter} from '~/public/controllers/game/gameSetup.js';
+import {eventEmitter} from '~/public/game/controllers/game/gameSetup.js';
 
 export default class {
     constructor(options) {
@@ -44,19 +43,13 @@ export default class {
         }
     }
 
-    // add event listeners
-
     _addEventListeners() {
         eventEmitter.on(EVENTS.SHOW_MESSAGE_FROM_BOSS, this._showNewMessage.bind(this));
     }
 
-    // remove event listeners
-
     _removeEventListeners() {
         eventEmitter.off(EVENTS.SHOW_MESSAGE_FROM_BOSS, this._showNewMessage.bind(this));
     }
-
-    // destroy the instance
 
     destroy() {
     }

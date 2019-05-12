@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import {cvCollection} from '~/public/assets/text/cvCollection.js';
-import CLASSES from '~/public/controllers/constants/classes';
+import {cvCollection} from '~/public/game/assets/text/cvCollection.js';
+import CLASSES from '~/public/game/controllers/constants/classes';
 
 export default class {
     constructor() {

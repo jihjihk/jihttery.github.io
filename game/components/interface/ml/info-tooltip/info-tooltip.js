@@ -1,22 +1,28 @@
 import $ from 'jquery';
-import CLASSES from '~/public/controllers/constants/classes';
-import EVENTS from '~/public/controllers/constants/events';
-import UIBase from '~/public/components/interface/ui-base/ui-base';
-import {eventEmitter} from '~/public/controllers/game/gameSetup.js';
-import {mlLabStageContainer} from '~/public/controllers/game/gameSetup';
+import CLASSES from '~/public/game/controllers/constants/classes';
+import EVENTS from '~/public/game/controllers/constants/events';
+import UIBase from '~/public/game/components/interface/ui-base/ui-base';
+import {eventEmitter} from '~/public/game/controllers/game/gameSetup.js';
+import {mlLabStageContainer} from '~/public/game/controllers/game/gameSetup';
 
 export default class extends UIBase {
-    constructor({text, parent}) {
+    constructor({text, parent}, callback) {
         super();
         this.$el = $('#js-tooltip');
         this.$icon = this.$el.find('.Tooltip-icon');
-        this.$text = this.$el.find('.Tooltip-text');
+        this.$tooltip = this.$el.find('.Tooltip-box');
+        this.$text = this.$el.find('.Tooltip-box__text');
+        this.$dismissBtn = this.$el.find('.Tooltip-box__button');
+
         this.parent = parent;
         this.content = text;
         this.isActive = false;
+        this.callback = callback;
+
         this._handleIconHover = this._handleIconHover.bind(this);
         this._setContent();
         this._addEventListeners();
+        this.show();
     }
 
     _setContent() {
@@ -27,7 +33,7 @@ export default class extends UIBase {
         });
         if (!this.$icon.hasClass(CLASSES.PULSATE)) this.$icon.addClass(CLASSES.PULSATE);
         this.$text.html(this.content);
-        this.$text.addClass(CLASSES.IS_INACTIVE);
+        this.$tooltip.addClass(CLASSES.IS_INACTIVE);
     }
 
     _handleIconHover() {
@@ -36,19 +42,26 @@ export default class extends UIBase {
             this.$icon.removeClass(CLASSES.PULSATE);
             eventEmitter.emit(EVENTS.RESUME_TIMELINE, {});
         };
-        this.$text.toggleClass(CLASSES.IS_INACTIVE);
+    }
+
+    _expandTooltip() {
+        this.isActive = true;
+        this.$icon.addClass(CLASSES.IS_INACTIVE);
+        this.$tooltip.removeClass(CLASSES.IS_INACTIVE);
+    }
+
+    _dismissTooltip() {
+        this.callback();
+        this.destroy();
     }
 
     _addEventListeners() {
-        this.$el.on( 'mouseover', this._handleIconHover).mouseleave('mouseout', this._handleIconHover);
-        eventEmitter.on(EVENTS.SHOW_TOOLTIP, this.show.bind(this));
-        eventEmitter.on(EVENTS.DESTROY_TOOLTIP, this.destroy.bind(this));
+        this.$el.on('click', this._expandTooltip.bind(this));
+        this.$dismissBtn.on('click', this._dismissTooltip.bind(this));
     }
 
     _removeEventListeners() {
         this.$el.off();
-        eventEmitter.off(EVENTS.SHOW_TOOLTIP, this.show.bind(this));
-        eventEmitter.off(EVENTS.DESTROY_TOOLTIP, this.destroy.bind(this));
     }
 
     show() {

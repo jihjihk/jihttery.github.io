@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import CLASSES from '~/public/controllers/constants/classes';
+import CLASSES from '~/public/game/controllers/constants/classes';
 
 export default class {
     constructor({resume, $parent}) {

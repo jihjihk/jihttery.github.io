@@ -1,9 +1,9 @@
 // import $ from 'jquery';
-import EVENTS from '~/public/controllers/constants/events';
-import PersonTooltip from '~/public/components/interface/ml/person-tooltip/person-tooltip';
-import {clamp} from '~/public/controllers/common/utils';
-import {ticker} from '~/public/controllers/game/gameSetup.js';
-import {eventEmitter} from '~/public/controllers/game/gameSetup.js';
+import EVENTS from '~/public/game/controllers/constants/events';
+import PersonTooltip from '~/public/game/components/interface/ml/person-tooltip/person-tooltip';
+import {clamp} from '~/public/game/controllers/common/utils';
+import {ticker} from '~/public/game/controllers/game/gameSetup.js';
+import {eventEmitter} from '~/public/game/controllers/game/gameSetup.js';
 
 export default class {
     constructor({parent, stage}) {

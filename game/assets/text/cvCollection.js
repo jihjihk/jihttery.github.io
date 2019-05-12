@@ -3,8 +3,7 @@ Object of all CVs for each stage
 As of now, skills are scaled out of 10
 */// /////////////////
 
-import CLASSES from '../../controllers/constants/classes';
-const peopleData = require('./manualStageData.json');
+import CLASSES from '~/public/game/controllers/constants/classes';
 
 const cvCollection = {
     cvFeatures: [
@@ -25,7 +24,7 @@ const cvCollection = {
             class: CLASSES.CV_AMBITION,
         },
     ],
-    smallOfficeStage: peopleData.manualStageCandidates
+    cvData: require('./cvData.json').candidates,
 };
 
-export { cvCollection };
+export {cvCollection};

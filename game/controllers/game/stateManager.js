@@ -1,15 +1,15 @@
 import * as machina from 'machina';
 import {eventEmitter} from './gameSetup.js';
-import {Office} from '../../components/pixi/office.js';
-import MLLab from '../../components/pixi/ml/lab.js';
-import TitlePageUI from '../../components/interface/ui-title/ui-title';
-import TextBoxUI from '../../components/interface/ui-textbox/ui-textbox';
-import PerfMetrics from '~/public/components/interface/perf-metrics/perf-metrics';
-import TaskUI from '../../components/interface/ui-task/ui-task';
-import TransitionOverlay from '../../components/interface/transition/overlay/overlay';
+import {Office} from '~/public/game/components/pixi/manual-stage/office.js';
+import MlLabNarrator from '~/public/game/controllers/game/mlLabNarrator';
+import TitlePageUI from '~/public/game/components/interface/ui-title/ui-title';
+import TextBoxUI from '~/public/game/components/interface/ui-textbox/ui-textbox';
+import PerfMetrics from '~/public/game/components/interface/perf-metrics/perf-metrics';
+import TransitionOverlay from '~/public/game/components/interface/transition/overlay/overlay';
+import {mlModule} from '~/public/game/controllers/machine-learning/mlModule.js';
 
 let office = new Office();
-let task;
+let currentStage;
 let revenue;
 let transitionOverlay;
 let titlePageUI;
@@ -79,116 +79,76 @@ const gameFSM = new machina.Fsm({
         },
 
         /* ///////////////////
-        // Small office, hiring 5
+        // Small Office Stage
         */// /////////////////
-
         smallOfficeStage: {
             _onEnter: function() {
+                currentStage = 0;
+
                 new TextBoxUI({
                     content: txt.smallOfficeStage.messageFromVc,
                     responses: txt.smallOfficeStage.responses,
                     show: true,
-                    isSmallStage: true,
+                    stageNumber: currentStage,
                     overlay: true,
-                });
-
-                eventEmitter.on('instructionAcked', (data) => {
-                    if (data.isSmallStage) {
-                        revenue = new PerfMetrics();
-                        revenue.show();
-                        office.draw(0);
-                        task = new TaskUI({show: true, hires: hiringGoals['smallStage'], duration: 60, content: txt.smallOfficeStage.taskDescription});
-                    }
                 });
             },
 
             nextStage: 'mediumOfficeStage',
 
-            repeatStage: function() {
-                revenue.destroy();
-                this.transition('repeatSmallOfficeStage');
-            },
-
             _onExit: function() {
-                revenue.hide();
             },
-        },
-
-        repeatSmallOfficeStage: {
-            _onEnter: function() {
-                new TextBoxUI({
-                    content: txt.smallOfficeStage.retryMessage,
-                    responses: txt.smallOfficeStage.retryResponses,
-                    show: true,
-                    isSmallStage: true,
-                    overlay: true,
-
-                });
-
-                eventEmitter.on('instructionAcked', (data) => {
-                    this.handle('nextStage');
-                });
-            },
-
-            nextStage: 'smallOfficeStage',
         },
 
         /* //////////////////
-        // Medium office, hiring 15
-        *////////////////////
+        // Medium Small Office Stage
+        */// /////////////////
         mediumOfficeStage: {
             _onEnter: function() {
+                currentStage = 1;
+
                 new TextBoxUI({
+                    stageNumber: currentStage,
                     content: txt.mediumOfficeStage.messageFromVc,
                     responses: txt.mediumOfficeStage.responses,
                     show: true,
-                    overlay: true
+                    overlay: true,
                 });
+            },
 
-                eventEmitter.on('instructionAcked', (data) => {
-                    if (!data.isSmallStage) {
-                        revenue.show()
-                        office.draw(1);
-                        task = new TaskUI({show: true, hires: hiringGoals['mediumStage'], duration: 60, content: txt.mediumOfficeStage.taskDescription});
-                    }
+            nextStage: 'largeOfficeStage',
+
+            _onExit: function() {
+            },
+        },
+
+        /* //////////////////
+        // Large Small Office Stage
+        */// /////////////////
+        largeOfficeStage: {
+            _onEnter: function() {
+                currentStage = 2;
+
+                new TextBoxUI({
+                    stageNumber: currentStage,
+                    content: txt.largeOfficeStage.messageFromVc,
+                    responses: txt.largeOfficeStage.responses,
+                    show: true,
+                    overlay: true,
                 });
             },
 
             nextStage: 'mlTransitionStage',
 
-            repeatStage: function() {
-                revenue.hide();
-                this.transition('repeatMediumOfficeStage');
-            },
-
             _onExit: function() {
-                revenue.hide();
             },
-        },
-
-        repeatMediumOfficeStage: {
-            _onEnter: function() {
-                new TextBoxUI({
-                    content: txt.mediumOfficeStage.retryMessage,
-                    responses: txt.mediumOfficeStage.retryResponses,
-                    show: true,
-                    isSmallStage: false,
-                    overlay: true
-
-                });
-
-                eventEmitter.on('instructionAcked', (data) => {
-                    this.handle('nextStage');
-                });
-            },
-
-            nextStage: 'smallOfficeStage',
         },
 
         mlTransitionStage: {
             _onEnter: function() {
                 if (office) office.delete();
                 transitionOverlay = new TransitionOverlay({show: true});
+                mlModule.train();
             },
 
             nextStage: 'mlLabStage',
@@ -207,22 +167,23 @@ const gameFSM = new machina.Fsm({
                     new PerfMetrics().show();
                 }
 
-                new MLLab();
+                new MlLabNarrator();
             },
             // TODO destroy the lab!
             nextStage: 'Oh gosh we haven\'t even started it hahah',
 
         },
 
-
     },
 
     startGame: function() {
         this.handle('startGame');
     },
+
     nextStage: function() {
         this.handle('nextStage');
     },
+
     repeatStage: function() {
         this.handle('repeatStage');
     },

@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import EVENTS from '~/public/controllers/constants/events';
-import {waitForSeconds, clamp} from '~/public/controllers/common/utils';
-import {eventEmitter} from '~/public/controllers/game/gameSetup.js';
+import EVENTS from '~/public/game/controllers/constants/events';
+import {waitForSeconds, clamp} from '~/public/game/controllers/common/utils';
+import {eventEmitter} from '~/public/game/controllers/game/gameSetup.js';
 
 export default class {
     constructor(options) {

@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import {TweenLite} from 'gsap/TweenMax';
-import CLASSES from '~/public/controllers/constants/classes';
-import UIBase from '~/public/components/interface/ui-base/ui-base';
-import {waitForSeconds} from '~/public/controllers/common/utils';
+import CLASSES from '~/public/game/controllers/constants/classes';
+import UIBase from '~/public/game/components/interface/ui-base/ui-base';
+import {waitForSeconds} from '~/public/game/controllers/common/utils';
 
 
 export default class extends UIBase {

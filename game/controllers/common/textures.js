@@ -1,5 +1,5 @@
-import SCALES from '~/public/controllers/constants/pixi-scales.js';
-import {screenSizeDetector} from '~/public/controllers/common/utils.js';
+import SCALES from '~/public/game/controllers/constants/pixi-scales.js';
+import {screenSizeDetector} from '~/public/game/controllers/common/utils.js';
 
 const SPRITES = {};
 

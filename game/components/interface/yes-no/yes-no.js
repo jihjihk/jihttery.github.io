@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import {TweenLite} from 'gsap/TweenMax';
-import CLASSES from '~/public/controllers/constants/classes';
-import EVENTS from '~/public/controllers/constants/events';
-import UIBase from '~/public/components/interface/ui-base/ui-base';
-import {spotlight} from '~/public/components/pixi/office';
-import {eventEmitter, pixiApp} from '~/public/controllers/game/gameSetup.js';
+import CLASSES from '~/public/game/controllers/constants/classes';
+import EVENTS from '~/public/game/controllers/constants/events';
+import UIBase from '~/public/game/components/interface/ui-base/ui-base';
+import {spotlight} from '~/public/game/components/pixi/manual-stage/office';
+import {eventEmitter, pixiApp} from '~/public/game/controllers/game/gameSetup.js';
 
 export default class extends UIBase {
     constructor(options) {
@@ -14,9 +14,19 @@ export default class extends UIBase {
         this.$yesButton = this.$el.find('.js-yes');
         this.$noButton = this.$el.find('.js-no');
         this._addEventListeners();
+        this.hasBeenClicked = false;
     }
 
     _acceptClicked(e) {
+        // whenever you want to log an event in Google Analytics, just call one of these functions with appropriate names
+        gtag('event', 'accept', {
+            'event_category': 'default',
+            'event_label': 'accept/reject',
+        });
+        if (!this.hasBeenClicked) {
+            eventEmitter.emit(EVENTS.UPDATE_INSTRUCTIONS, {type: 'manual-eval-hide'});
+            this.hasBeenClicked = true;
+        };
         this.$yesButton.addClass(CLASSES.ACCEPTED);
         if (candidateInSpot != null) {
             eventEmitter.emit(EVENTS.ACCEPTED, {});
@@ -25,6 +35,11 @@ export default class extends UIBase {
     }
 
     _rejectClicked(e) {
+        // whenever you want to log an event in Google Analytics, just call one of these functions with appropriate names
+        gtag('event', 'reject', {
+            'event_category': 'default',
+            'event_label': 'accept/reject',
+        });
         this.$noButton.addClass(CLASSES.REJECTED);
         if (candidateInSpot != null) {
             eventEmitter.emit(EVENTS.REJECTED, {});
@@ -36,9 +51,10 @@ export default class extends UIBase {
         this.$yesButton.click(this._acceptClicked.bind(this));
         this.$noButton.click(this._rejectClicked.bind(this));
 
-        eventEmitter.on(EVENTS.STAGE_TWO_COMPLETED, (data) => {
-            this.destroy();
+        eventEmitter.on(EVENTS.MANUAL_STAGE_COMPLETE, (data) => {
+            if (data.stageNumber == 2) this.destroy();
         });
+
         eventEmitter.on(EVENTS.CHANGE_SPOTLIGHT_STATUS, this._spotlightStatusHandler.bind(this));
     };
 
@@ -48,7 +64,7 @@ export default class extends UIBase {
 
         eventEmitter.off(EVENTS.ACCEPTED, () => {});
         eventEmitter.off(EVENTS.REJECTED, () => {});
-        eventEmitter.off(EVENTS.STAGE_TWO_COMPLETED, () => {});
+        eventEmitter.off(EVENTS.MANUAL_STAGE_COMPLETE, () => {});
         eventEmitter.off(EVENTS.CHANGE_SPOTLIGHT_STATUS, this._spotlightStatusHandler.bind(this));
     }
 
@@ -62,7 +78,7 @@ export default class extends UIBase {
 
     show() {
         this.$el.css({
-            'top': `${spotlight.y - 180}px`,
+            'top': `${spotlight.y - 150}px`,
             'left': `${spotlight.x + 10}px`,
         });
         TweenLite.set(this.$id, {y: 5, xPercent: -50, opacity: 0});
