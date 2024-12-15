@@ -1,0 +1,46 @@
+doctype html
+html(lang='en')
+	block link
+		-var selected = 'Home';
+	-var menu = {'Home' : '/', 'Writing' : '/writing', 'Projects': '/projects'};
+
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		meta(name='description', content="Jihyun's website")
+		meta(name='author', content='Jihyun Kim')
+		title= selected
+		// Bootstrap core CSS
+		link(href='../vendor/bootstrap.min.css', rel='stylesheet')
+		// Custom styles for this template
+		link(href='../css/style.css', rel='stylesheet')
+		link(href='https://fonts.googleapis.com/css?family=Nunito:300,400,700|Open+Sans:400,700', rel='stylesheet')
+		link(href='https://fonts.googleapis.com/css?family=Lora:400,700', rel='stylesheet')
+		link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css", rel='stylesheet', type='text/css')
+		link(rel='shortcut icon' href='../favicon.ico')
+
+	body
+		.container
+			header.header.clearfix
+				h1#header-name.sidebar-brand Jihyun
+
+				nav
+					ul.nav.justify-content-center
+						each val, key in menu
+							if selected === key
+								li.nav-item
+									a.nav-link.active-page(href=val, title=key)= key
+							else
+								li.nav-item
+									a.nav-link(href=val, title=key)= key
+			main(role='main')
+				.container
+					.row
+						block content
+					block article
+
+			footer.footer
+				.container
+
+		script(src='vendor/jquery.min.js')
+		script(src='vendor/bootstrap.min.js')

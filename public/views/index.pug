@@ -1,0 +1,32 @@
+extends layout.pug
+
+block link
+  -var selected = 'Home';
+
+block content
+  .col
+  .col-lg-9.col-md-10.col-xs-12.mr-auto
+    .page-header
+      h1
+        | Home
+    hr
+    .row.home-intro
+      .col-md-12
+        h1 Hi, I'm Jihyun.
+        br
+        h3
+          | I am a product manager based in Singapore.
+        p.pt-3
+          | I believe that all technology should serve more than the few that build it. I worked on a 
+          b
+            a(href="https://www.survivalofthebestfit.com/") dream project
+          |  with a dream team to help the public better understand AI and hiring bias.
+        
+        .pt-5.icon-line
+          a(href='https://linkedin.com/in/kimjihyun/')
+            i.fa.fa-linkedin.fa-lg
+          a(href='https://github.com/jihjihk')
+            i.fa.fa-github.fa-lg
+          a(href='https://medium.com/@jihjihk')
+            i.fa.fa-medium.fa-lg
+  .col
